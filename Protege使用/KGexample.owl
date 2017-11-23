@@ -1,0 +1,220 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY untitled-ontology-6 "http://www.semanticweb.org/vcyber/ontologies/2017/10/untitled-ontology-6#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.semanticweb.org/vcyber/ontologies/2017/10/untitled-ontology-6#"
+     xml:base="http://www.semanticweb.org/vcyber/ontologies/2017/10/untitled-ontology-6"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:untitled-ontology-6="http://www.semanticweb.org/vcyber/ontologies/2017/10/untitled-ontology-6#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/vcyber/ontologies/2017/10/untitled-ontology-6"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/vcyber/ontologies/2017/10/untitled-ontology-6#开山之祖 -->
+
+    <owl:ObjectProperty rdf:about="&untitled-ontology-6;开山之祖"/>
+    
+
+
+    <!-- http://www.semanticweb.org/vcyber/ontologies/2017/10/untitled-ontology-6#曾住 -->
+
+    <owl:ObjectProperty rdf:about="&untitled-ontology-6;曾住">
+        <rdfs:domain>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&untitled-ontology-6;曾住"/>
+                <owl:someValuesFrom rdf:resource="&untitled-ontology-6;人物"/>
+            </owl:Restriction>
+        </rdfs:domain>
+        <rdfs:range>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&untitled-ontology-6;曾住"/>
+                <owl:someValuesFrom rdf:resource="&untitled-ontology-6;地点"/>
+            </owl:Restriction>
+        </rdfs:range>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/vcyber/ontologies/2017/10/untitled-ontology-6#父亲 -->
+
+    <owl:ObjectProperty rdf:about="&untitled-ontology-6;父亲">
+        <rdfs:domain rdf:resource="&untitled-ontology-6;人物"/>
+        <rdfs:range rdf:resource="&untitled-ontology-6;男人"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/vcyber/ontologies/2017/10/untitled-ontology-6#相识 -->
+
+    <owl:ObjectProperty rdf:about="&untitled-ontology-6;相识">
+        <rdf:type rdf:resource="&owl;SymmetricProperty"/>
+        <rdfs:domain rdf:resource="&untitled-ontology-6;人物"/>
+        <rdfs:range rdf:resource="&untitled-ontology-6;人物"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/vcyber/ontologies/2017/10/untitled-ontology-6#别名 -->
+
+    <owl:DatatypeProperty rdf:about="&untitled-ontology-6;别名"/>
+    
+
+
+    <!-- http://www.semanticweb.org/vcyber/ontologies/2017/10/untitled-ontology-6#法号 -->
+
+    <owl:DatatypeProperty rdf:about="&untitled-ontology-6;法号">
+        <rdfs:domain rdf:resource="&untitled-ontology-6;禅师"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/vcyber/ontologies/2017/10/untitled-ontology-6#人物 -->
+
+    <owl:Class rdf:about="&untitled-ontology-6;人物">
+        <owl:disjointWith rdf:resource="&untitled-ontology-6;地点"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/vcyber/ontologies/2017/10/untitled-ontology-6#地点 -->
+
+    <owl:Class rdf:about="&untitled-ontology-6;地点"/>
+    
+
+
+    <!-- http://www.semanticweb.org/vcyber/ontologies/2017/10/untitled-ontology-6#女人 -->
+
+    <owl:Class rdf:about="&untitled-ontology-6;女人">
+        <rdfs:subClassOf rdf:resource="&untitled-ontology-6;人物"/>
+        <owl:disjointWith rdf:resource="&untitled-ontology-6;男人"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/vcyber/ontologies/2017/10/untitled-ontology-6#寺庙 -->
+
+    <owl:Class rdf:about="&untitled-ontology-6;寺庙">
+        <rdfs:subClassOf rdf:resource="&untitled-ontology-6;地点"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/vcyber/ontologies/2017/10/untitled-ontology-6#男人 -->
+
+    <owl:Class rdf:about="&untitled-ontology-6;男人">
+        <rdfs:subClassOf rdf:resource="&untitled-ontology-6;人物"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/vcyber/ontologies/2017/10/untitled-ontology-6#禅师 -->
+
+    <owl:Class rdf:about="&untitled-ontology-6;禅师">
+        <rdfs:subClassOf rdf:resource="&untitled-ontology-6;人物"/>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/vcyber/ontologies/2017/10/untitled-ontology-6#佛印禅师 -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-6;佛印禅师">
+        <rdf:type rdf:resource="&untitled-ontology-6;禅师"/>
+        <曾住 rdf:resource="&untitled-ontology-6;镇江金山寺"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/vcyber/ontologies/2017/10/untitled-ontology-6#晋朝泽心寺 -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-6;晋朝泽心寺">
+        <rdf:type rdf:resource="&untitled-ontology-6;寺庙"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/vcyber/ontologies/2017/10/untitled-ontology-6#苏轼 -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-6;苏轼">
+        <rdf:type rdf:resource="&untitled-ontology-6;人物"/>
+        <别名>苏东坡、东坡</别名>
+        <相识 rdf:resource="&untitled-ontology-6;佛印禅师"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/vcyber/ontologies/2017/10/untitled-ontology-6#裴德伦 -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-6;裴德伦">
+        <rdf:type rdf:resource="&untitled-ontology-6;男人"/>
+        <法号>法海</法号>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/vcyber/ontologies/2017/10/untitled-ontology-6#镇江金山寺 -->
+
+    <owl:NamedIndividual rdf:about="&untitled-ontology-6;镇江金山寺">
+        <rdf:type rdf:resource="&untitled-ontology-6;寺庙"/>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.5.1) http://owlapi.sourceforge.net -->
+
