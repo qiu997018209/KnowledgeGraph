@@ -1,0 +1,299 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Force</title>
+<style>
+.nodetext {
+    font-size: 12px ;
+    font-family: SimSun;
+    fill:#000000;
+}
+.attrtext {
+    font-size: 12px ;
+    font-family: SimSun;
+    fill:#000000;
+    fill-opacity:0.0;
+}
+.linetext {
+    font-size: 12px ;
+    font-family: SimSun;
+    fill:#1f77b4;
+    fill-opacity:0.0;
+}
+.circleImg {
+stroke: #ff7f0e;
+stroke-width: 1.5px;
+}
+.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
+#licensing {
+  fill: green;
+}
+
+.link.licensing {
+  stroke: green;
+}
+
+.link.resolved {
+  stroke-dasharray: 0,2 1;
+}
+
+circle {
+  fill: #ccc;
+  /* stroke: #333; */
+  /* stroke-width: 1.5px; */
+}
+
+text {
+  font: 12px Microsoft YaHei;
+  pointer-events: none;
+  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+}
+
+.linetext {
+    font-size: 12px Microsoft YaHei;
+}
+
+ .container {
+    height: 225px;
+    width: 175px;
+    border:2px solid #000;
+    overflow-y: scroll;
+    overflow-x: hidden;
+} 
+
+ svg {
+    display: block;
+    width: 200%;
+    height: 200%;
+} 
+</style></head>
+<body>
+        <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script>        
+        
+        // var width = 900;
+        // var height = 800;
+		var width = 1560,
+    		height = 800;
+        	img_w = 77;
+        	img_h = 80;
+        	radius = 40;    //圆形半径
+        
+        var svg = d3.select("body").append("svg")
+                                .attr("width",width)
+                                .attr("height",height);
+
+
+        //var data = "{{ data }}"
+        d3.json("data",function(error,root){
+            
+            if( error ){
+                return console.log(error);
+            }
+            console.log(root);
+
+
+			// high level nodes and edges
+			var nodes = {};
+			var links = root.edges;
+
+			links.forEach(function(link) {
+				link.source = nodes[link.source] || (nodes[link.source] = {name: link.source, label: link.label});
+				link.target = nodes[link.target] || (nodes[link.target] = {name: link.target, label: link.label});
+			});
+
+			// // secondary nodes and edges
+			// var secondary_nodes = {};
+			//var secondary_links = root.secondary_edges;
+			//secondary_links.forEach(function(link, index) {
+				//link.source = nodes[link.source] || (nodes[link.source] = {name: link.source, label: link.label});
+				//link.target = (nodes[index+"_"+link.target] = {name: link.target, label: link.label});
+				//links.push(link);
+				//index++;
+			//});
+			// debugger
+			console.log(nodes);
+			console.log(links);
+
+            
+    //         //D3力导向布局
+            var force = d3.layout.force()
+                            .nodes(d3.values(nodes))
+                            .links(links)
+                            .size([width,height])
+                            .linkDistance(function(d) {
+									if (d.label != "property") {
+										return 200;
+									}
+									return 70;
+								})
+                            .charge(-1500)
+							.on("tick",tick)
+                            .start();
+            
+            //边             
+            var edges_line = svg.selectAll("line")
+                                .data(force.links())
+                                .enter()
+                                .append("line")
+                                .style("stroke","#9dc477")
+                                .style("stroke-width",1)
+								.on("mouseover",function(edge){
+									//单击时让连接线加粗
+									edges_line.style("stroke-width",function(line){
+										if(line.source.name==edge.source.name && line.target.name==edge.target.name){
+											return 4;
+										}
+										else {
+											return 0.5;
+										}
+									});
+								})
+								.on("mouseout",function(edge){
+									edges_line.style("stroke-width",function(line){
+										return 0.5;
+									});
+								});
+            
+
+            //边上的文字（人物之间的关系）            
+            var edges_text = svg.append("g").selectAll(".linetext")
+                                .data(force.links())
+                                .enter()
+                                .append("text")
+                                .attr("class","linetext")
+                                .text(function(d){
+                                    return d.relation;
+                                })
+                                .style("fill-opacity", 1.0)
+                             .call(force.drag);             
+            
+			var circle = svg.append("g").selectAll("circle")
+							   .data(force.nodes())
+							   .enter().append("circle")
+							//    .style("fill", "#99BBFF")
+							   .style("fill", function(node){
+									var color;//圆圈背景色
+									var link=links[node.index];
+									if(node.label=="property"){
+										color="#e9b99f";
+									}else{
+										color="#afd1fc";
+									}
+									return color;
+								})
+								.attr("r", radius)
+								.attr("r", function(d) {
+									  if (d.label == "relation") {
+										return radius;
+									  }
+										return 0.7*radius;
+									})
+								.on("click",function(node){
+									//单击时让连接线加粗
+									edges_line.style("stroke-width",function(line){
+										console.log(line);
+										if(line.source.name==node.name || line.target.name==node.name){
+											return 4;
+										}else{
+											return 0.5;
+										}
+									});
+								})
+								.call(force.drag);		
+
+			circle.append("svg:title")  
+					.text(function(node) { 
+						return "双击可查看详情"
+					});  	
+
+			var text = svg.append("g").selectAll("text")
+				.data(force.nodes())
+				.enter()
+				.append("text")
+				.attr("dy", ".35em")  
+				.attr("text-anchor", "middle")//在圆圈中加上数据  
+				.style('fill', "#000000")
+				.attr('x',function(d){
+					// console.log(d.name+"---"+ d.name.length);
+					var re_en = /[a-zA-Z]+/g;
+					//如果是全英文，不换行
+					if(d.name.match(re_en)){
+						d3.select(this).append('tspan')
+						.attr('x',0)
+						.attr('y',2)
+						.text(function(){return d.name;});
+					}
+					//如果小于四个字符，不换行
+					else if(d.name.length<=6){
+						d3.select(this).append('tspan')
+						.attr('x',0)
+						.attr('y',2)
+						.text(function(){return d.name;});
+					}else{
+						var top=d.name.substring(0,6);
+						var bot=d.name.substring(6,d.name.length);
+
+						d3.select(this).text(function(){return '';});
+
+						d3.select(this).append('tspan')
+							.attr('x',0)
+							.attr('y',-7)
+							.text(function(){return top;});
+
+						d3.select(this).append('tspan')
+							.attr('x',0)
+							.attr('y',10)
+							.text(function(){return bot;});
+					}
+				});
+        //直接显示文字    
+        /*.text(function(d) { 
+        return d.name; */
+    // });
+                                
+
+		function tick() {
+				//path.attr("d", linkArc);//连接线
+				circle.attr("transform", transform1);//圆圈
+				text.attr("transform", transform2);//顶点文字
+
+                //更新连接线的位置
+                edges_line.attr("x1",function(d){ return d.source.x; });
+                edges_line.attr("y1",function(d){ return d.source.y; });
+                edges_line.attr("x2",function(d){ return d.target.x; });
+                edges_line.attr("y2",function(d){ return d.target.y; });
+                
+                
+                //更新连接线上文字的位置
+                edges_text.attr("x",function(d){ return (d.source.x + d.target.x) / 2 ; });
+                edges_text.attr("y",function(d){ return (d.source.y + d.target.y) / 2 ; });
+		}
+
+		// //设置连接线的坐标,使用椭圆弧路径段双向编码
+		// function linkArc(d) {
+		// 	//var dx = d.target.x - d.source.x,
+		// // dy = d.target.y - d.source.y,
+		// 	// dr = Math.sqrt(dx * dx + dy * dy);
+		// //return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+		// //打点path格式是：Msource.x,source.yArr00,1target.x,target.y  
+		
+		// 	return 'M '+d.source.x+' '+d.source.y+' L '+ d.target.x +' '+d.target.y
+		// }
+		//设置圆圈和文字的坐标
+		function transform1(d) {
+			return "translate(" + d.x + "," + d.y + ")";
+		}
+		function transform2(d) {
+			return "translate(" + (d.x) + "," + d.y + ")";
+		}
+		});
+        
+</script>
+</body>
+</html>
