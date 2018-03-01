@@ -28,23 +28,20 @@ class KnowGraph(object):
     def lookup_entry2entry(self,client_params,server_param):
         params=client_params["params"]
         edges=set()
+        
         #考虑到顺序的问题，所以查了四次
         result1=self.graph.data("MATCH (s)-[r]->(e) where s.name='{}' and e.name='{}' RETURN s.name,r.name,e.name".format(params['entry1'],params['entry2']))
         result2=self.graph.data("MATCH (s)-[r]->(e) where s.name='{}' and e.name='{}' RETURN s.name,r.name,e.name".format(params['entry2'],params['entry1']))
-        result3=self.graph.data("MATCH (e)<-[r]-(s) where s.name='{}' and e.name='{}' RETURN s.name,r.name,e.name".format(params['entry1'],params['entry2']))
-        result4=self.graph.data("MATCH (e)<-[r]-(s) where s.name='{}' and e.name='{}' RETURN s.name,r.name,e.name".format(params['entry2'],params['entry1']))
-        
-        if len(result1)==0 and len(result2)==0 and len(result3)==0 and len(result4)==0 :
-            server_param["result"]=[{"success":'false'}]
+
+        if len(result1)==0 and len(result2)==0:
+            server_param["result"]={"success":'false'}
             return
         for item in result1:
             edges.add((item['s.name'],item['r.name'],item['e.name']))
         for item in result2:
             edges.add((item['s.name'],item['r.name'],item['e.name']))           
-        for item in result3:
-            edges.add((item['s.name'],item['r.name'],item['e.name']))
-        for item in result4:
-            edges.add((item['s.name'],item['r.name'],item['e.name']))                 
+        
+        #result=self.graph.data("match (a),(b) where a.name='{}' and b.name='{}' match p = shortestPath((a)-[*..15]-(b))return p".format(params['entry1'],params['entry2']))                
         server_param["result"]={'edges':[list(i) for i in edges],"success":'true'}  
         
     #查找指定实体的指定属性
